@@ -11,6 +11,6 @@ using namespace std;
 
 int main(void)
 {
-	cout<<"HELLO";
+	cout<<"HELLO World";
 	return 0;
 }
