@@ -9,6 +9,16 @@
 
 using namespace std;
 
+//Initialize the single memory space
+
+
+//Returns the fetched instruction from address given by PC
+void fetch(uint16_t address)
+{
+
+}
+
+
 int main(void)
 {
 	cout<<"HELLO World";
