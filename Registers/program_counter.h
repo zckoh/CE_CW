@@ -17,7 +17,9 @@ public:
 	PC();
 	int address;
 	int counter = 0;
-
+	void increment_counter();
+	void reset();
+	void point_next_address();
 };
 
 
