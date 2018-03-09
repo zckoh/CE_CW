@@ -20,6 +20,8 @@ enum opcodes
 	write,		//Write data from AC to next 2 bytes in memory
 	add,		//Add [PC+1] with [PC+2]
 	subtract,	//Subtract [PC+2] from [PC+1]
+	CMP, 		//compare accumulator with mem
+
 	EOP		 	//End of Program
 };
 

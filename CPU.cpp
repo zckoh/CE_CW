@@ -16,7 +16,7 @@ CPU::CPU() {
 	running = false;
 }
 
-//Returns the fetched instruction from address given by PC
+//Returns the fetched value from address given by PC
 //first byte is for MSB of 16 bits
 uint16_t CPU::fetch(uint16_t address)
 {
@@ -46,16 +46,26 @@ void CPU::emulate(uint16_t start_addr)
 		//decode
 		switch (IR)
 		{
-			case add:
+			case read:
 			{
-				AC = mem_stack[PC+1] + mem_stack[PC+2];
-				//increment to next instruction
-				PC = PC +3;
+				AC = fetch(PC);
+				PC += 2;
 			}break;
 			case write:
 			{
 				put(PC,AC);
-				PC = PC + 3;
+				PC += 2;
+			}break;
+			case add:
+			{
+				AC = mem_stack[PC+1] + mem_stack[PC+2];
+				//increment to next instruction
+				PC += 2;
+			}break;
+			case subtract:
+			{
+				AC = mem_stack[PC+1] - mem_stack[PC+2];
+				PC += 2;
 			}break;
 			case EOP:
 			{
@@ -63,6 +73,7 @@ void CPU::emulate(uint16_t start_addr)
 			}break;
 
 		}
+		PC ++;
 	}
 	//fetch & store in IR
 	//point PC to next instruction

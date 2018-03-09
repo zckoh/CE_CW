@@ -64,21 +64,8 @@ int main(void)
 	a.mem_stack[5] = 10;
 	a.mem_stack[6] = write;
 	a.mem_stack[9] = EOP;
-
 	a.emulate(0);
-//	printf("%02X\n",a.mem_stack[0]);
-//	printf("%02X\n",a.mem_stack[3]);
-//	printf("%02X\n",a.mem_stack[4]);
-//	printf("%02X\n",a.mem_stack[2]);
-//	printf("%02X\n",a.fetch(1));
-
 	printf("%02X\n",a.mem_stack[7]);
 	printf("%02X\n",a.mem_stack[8]);
-
-//	a.put(1,1404);
-//	printf("%02X\n",1404);
-//	printf("%02X\n",a.mem_stack[1]);
-//	printf("%02X\n",a.mem_stack[2]);
-//	printf("%02X\n",a.fetch(1));
 	return 0;
 }
