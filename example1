@@ -1,0 +1,47 @@
+//What the program does in C code
+a = 41
+b = 40
+if(a<b)
+{
+	printf(a+a)
+}
+else
+{
+	printf(a)
+}
+
+
+	//Define what is inside the memory (flashing in the program)
+	//program code
+	a.mem_stack[0] = ADD; //Add 30 to ACC
+	a.mem_stack[1] = 0;
+	a.mem_stack[2] = 30;
+	a.mem_stack[3] = SLT; //set flag(mem_stack[500] if mem_stack[30] < mem_stack[32]
+	a.mem_stack[4] = 0;
+	a.mem_stack[5] = 200;
+	a.mem_stack[6] = 0;
+	a.mem_stack[7] = 30;
+	a.mem_stack[8] = 0;
+	a.mem_stack[9] = 32;
+	a.mem_stack[10] = BNE; //compare mem_stack[30] != mem_stack[32]
+	a.mem_stack[11] = 0;   //if match then branch to mem_stack[16]
+	a.mem_stack[12] = 200;
+	a.mem_stack[13] = 0;
+	a.mem_stack[14] = 201;
+	a.mem_stack[15] = 0;
+	a.mem_stack[16] = 23;
+	//if branch not match come here
+	a.mem_stack[17] = STA; //store ACC value to mem_stack[35]
+	a.mem_stack[18] = 0;
+	a.mem_stack[19] = 34;
+	a.mem_stack[20] = JMP; //Jump to EOP
+	a.mem_stack[21] = 0;
+	a.mem_stack[22] = 29;
+	//if branch match then jump here
+	a.mem_stack[23] = ADD;
+	a.mem_stack[24] = 0;
+	a.mem_stack[25] = 30;
+	a.mem_stack[26] = STA;
+	a.mem_stack[27] = 0;
+	a.mem_stack[28] = 34;
+	a.mem_stack[29] = EOP;

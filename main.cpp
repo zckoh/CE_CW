@@ -38,34 +38,58 @@
 
 int main(void)
 {
-	//initialize all the pointers for the register stack
-//	reg_stack[9] = 20;
-//	PC_ptr = reg_stack;
-//	IR_ptr = reg_stack+10;
-//	AC_ptr = reg_stack+39;
-//
-//
-//	cout<< *PC_ptr<<"\n";
-//	*PC_ptr = 10;
-//	cout<< *PC_ptr<<"\n";
-//	cout<<"Value of IR: "<<*IR_ptr<<"\n";
-//	cout<<"Address of IR: "<<IR_ptr<<"\n";
-//	PC_ptr++;
-//	cout<<"HELLO World\n";
-//	cout<< *(reg_stack+9);
-
 
 	CPU a;
-	a.mem_stack[0] = add;
-	a.mem_stack[1] = 3;
-	a.mem_stack[2] = 4;
-	a.mem_stack[3] = add;
-	a.mem_stack[4] = 3;
-	a.mem_stack[5] = 10;
-	a.mem_stack[6] = write;
-	a.mem_stack[9] = EOP;
+
+	//Define what is inside the memory (flashing in the program)
+	//program code
+	a.mem_stack[0] = ADD; //Add 30 to ACC
+	a.mem_stack[1] = 0;
+	a.mem_stack[2] = 30;
+	a.mem_stack[3] = SLT; //set flag(mem_stack[500] if mem_stack[30] < mem_stack[32]
+	a.mem_stack[4] = 0;
+	a.mem_stack[5] = 200;
+	a.mem_stack[6] = 0;
+	a.mem_stack[7] = 30;
+	a.mem_stack[8] = 0;
+	a.mem_stack[9] = 32;
+	a.mem_stack[10] = BNE; //compare mem_stack[30] != mem_stack[32]
+	a.mem_stack[11] = 0;   //if match then branch to mem_stack[16]
+	a.mem_stack[12] = 200;
+	a.mem_stack[13] = 0;
+	a.mem_stack[14] = 201;
+	a.mem_stack[15] = 0;
+	a.mem_stack[16] = 23;
+	//if branch not match come here
+	a.mem_stack[17] = STA; //store ACC value to mem_stack[35]
+	a.mem_stack[18] = 0;
+	a.mem_stack[19] = 34;
+	a.mem_stack[20] = JMP; //Jump to EOP
+	a.mem_stack[21] = 0;
+	a.mem_stack[22] = 29;
+	//if branch match then jump here
+	a.mem_stack[23] = ADD;
+	a.mem_stack[24] = 0;
+	a.mem_stack[25] = 30;
+	a.mem_stack[26] = STA;
+	a.mem_stack[27] = 0;
+	a.mem_stack[28] = 34;
+	a.mem_stack[29] = EOP;
+
+
+	//static data
+	a.mem_stack[30] = 0;
+	a.mem_stack[31] = 41;
+	a.mem_stack[32] = 0;
+	a.mem_stack[33] = 40;
+
+
+	//dynamic data
+
+
+
 	a.emulate(0);
-	printf("%02X\n",a.mem_stack[7]);
-	printf("%02X\n",a.mem_stack[8]);
+	printf("%02X ",a.mem_stack[35]);
+	printf("%02X\n",a.mem_stack[34]);
 	return 0;
 }

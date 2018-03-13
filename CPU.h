@@ -16,26 +16,45 @@
 //define the opcodes
 enum opcodes
 {
-	read,		//Read data from next byte and store temporarily to AC
-	write,		//Write data from AC to next 2 bytes in memory
-	add,		//Add [PC+1] with [PC+2]
-	subtract,	//Subtract [PC+2] from [PC+1]
-	CMP, 		//compare accumulator with mem
+	undefined,	//When no opcode is detected, move on to next byte
+	//Data movement
+	LDA,		//load accumulator from direct memory
+	STA,		//Store accumulator to memory
 
-	EOP		 	//End of Program
+	//Arithmetic operations
+	ADD,		//Add memory to accumulator (16 bits operation)
+	ADI,		//Add immediate to accumulator
+	SUB,		//Subtract memory from accumulator (16 bits operation)
+	SBI,		//subtract immediate from accumulator
+
+	//others
+//	CMP, 		//compare accumulator with mem
+	SLT,		//set temporary registers to high if less than
+	SLI,		//set temporary registers to high if IMM1 less than IMM2
+	JMP,		//Jump to location in memory
+	BNE,		//Branch if not equal (A != B)
+	BEQ,		//Branch if equal (A == B)
+	EOP,		 	//End of Program
 };
 
 class CPU{
 public:
 	// Constructor with default values for data members
 	CPU();
+
+	//flags
 	bool running;
+	bool cmp_flag;
+
 	//Registers
 	int PC; //Program Counter
 	int AC;	//Accumulator
 	int IR; //Instruction Register
+
 	//Additional registers for when need more than 2 bytes in original registers
 	int REGS[7];
+	int temp;
+
 	uint8_t mem_stack[65536];
 
 	uint16_t fetch(uint16_t address);

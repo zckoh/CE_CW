@@ -14,6 +14,9 @@ CPU::CPU() {
 	REGS[7] = {0};
 	mem_stack[65536] = {0};
 	running = false;
+	cmp_flag = false;
+	temp = 0;
+
 }
 
 //Returns the fetched value from address given by PC
@@ -24,11 +27,11 @@ uint16_t CPU::fetch(uint16_t address)
 }
 
 //Puts the 16 bits value into 2 bytes in memory
-//Start from MSB of 16 bits
+//Start from LSB of 16 bits
 void CPU::put(uint16_t address,int value)
 {
-	mem_stack[address] = (uint8_t)((value & 0xFF00) >> 8);
-	mem_stack[address+1] = (uint8_t)(value & 0x00FF);
+	mem_stack[address+1] = (uint8_t)((value & 0xFF00) >> 8);
+	mem_stack[address] = (uint8_t)(value & 0x00FF);
 }
 
 void CPU::emulate(uint16_t start_addr)
@@ -41,31 +44,85 @@ void CPU::emulate(uint16_t start_addr)
 
 	while(running)
 	{
-		//fetch the first instruction
+		//fetch instruction & store in IR
 		IR = mem_stack[PC];
-		//decode
+		//check IR (decode)
 		switch (IR)
 		{
-			case read:
+			case undefined:
 			{
-				AC = fetch(PC);
+				printf("No command detected\n");
+			}break;
+			//Execute its task
+			case LDA:
+			{
+				AC = fetch(fetch(PC+1));
+				//point PC to next instruction
 				PC += 2;
 			}break;
-			case write:
+			case STA:
 			{
-				put(PC,AC);
+				put(fetch(PC+1),AC);
 				PC += 2;
 			}break;
-			case add:
+			case ADD:
 			{
-				AC = mem_stack[PC+1] + mem_stack[PC+2];
+				AC = AC + fetch(fetch(PC+1));
 				//increment to next instruction
 				PC += 2;
 			}break;
-			case subtract:
+			case ADI:
 			{
-				AC = mem_stack[PC+1] - mem_stack[PC+2];
+				AC = AC + fetch(PC+1);
 				PC += 2;
+			}break;
+			case SUB:
+			{
+				AC = AC - fetch(fetch(PC+1));
+				PC += 2;
+			}break;
+			case SBI:
+			{
+				AC = AC - fetch(PC+1);
+				PC += 2;
+			}break;
+			case SLT:
+			{
+				if(fetch(fetch(PC+3)) < fetch(fetch(PC+5)))
+				{
+					put(fetch(PC+1),1);
+				}
+				PC += 6;
+			}break;
+			case SLI:
+			{
+				if(fetch(PC+2)<fetch(PC+3))
+				{
+					put(fetch(PC+1),1);
+				}
+				else
+				{
+					put(fetch(PC+1),0);
+				}
+				PC += 6;
+			}break;
+			case JMP:
+			{
+				PC = fetch(PC+1)-1;
+			}break;
+			case BNE:
+			{
+				REGS[0] = fetch(fetch(PC+1));
+				REGS[1] = fetch(fetch(PC+3));
+				if(REGS[0]!=REGS[1])
+				{
+					PC = fetch(PC+5)-1; //because outside always increment by 1
+					printf("PC = %d\n",PC);
+				}
+				else
+				{
+					PC += 6;
+				}
 			}break;
 			case EOP:
 			{
@@ -75,10 +132,6 @@ void CPU::emulate(uint16_t start_addr)
 		}
 		PC ++;
 	}
-	//fetch & store in IR
-	//point PC to next instruction
-	//check IR (decode)
-	//Execute its task
 	//Write back
 
 
