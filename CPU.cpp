@@ -96,7 +96,7 @@ void CPU::emulate(uint16_t start_addr)
 			}break;
 			case SLI:
 			{
-				if(fetch(PC+2)<fetch(PC+3))
+				if(fetch(PC+3)<fetch(PC+5))
 				{
 					put(fetch(PC+1),1);
 				}
