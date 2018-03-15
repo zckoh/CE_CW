@@ -26,6 +26,7 @@ enum opcodes
 	ADI,		//Add immediate to accumulator
 	SUB,		//Subtract memory from accumulator (16 bits operation)
 	SBI,		//subtract immediate from accumulator
+	MUL,		//Multiply first operand with ACC
 
 	//others
 //	CMP, 		//compare accumulator with mem
@@ -34,6 +35,7 @@ enum opcodes
 	JMP,		//Jump to location in memory
 	BNE,		//Branch if not equal (A != B)
 	BEQ,		//Branch if equal (A == B)
+	CLA,		//clear accumulator
 	EOP,		 	//End of Program
 };
 

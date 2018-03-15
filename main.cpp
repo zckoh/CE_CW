@@ -43,53 +43,67 @@ int main(void)
 
 	//Define what is inside the memory (flashing in the program)
 	//program code
-	a.mem_stack[0] = ADD; //Add 30 to ACC
-	a.mem_stack[1] = 0;
-	a.mem_stack[2] = 30;
-	a.mem_stack[3] = SLT; //set flag(mem_stack[500] if mem_stack[30] < mem_stack[32]
-	a.mem_stack[4] = 0;
-	a.mem_stack[5] = 200;
-	a.mem_stack[6] = 0;
-	a.mem_stack[7] = 30;
+
+	//Multiplication
+	a.mem_stack[0] = CLA; //clear the AC
+	a.mem_stack[1] = LDA; //Load AC with data from mem_stack[100]
+	a.mem_stack[2] = 0;
+	a.mem_stack[3] = 100;
+	a.mem_stack[4] = MUL; //Multiply AC with data from mem_stack[100]
+	a.mem_stack[5] = 0;
+	a.mem_stack[6] = 100;
+	a.mem_stack[7] = STA; //store it into another memory
 	a.mem_stack[8] = 0;
-	a.mem_stack[9] = 32;
-	a.mem_stack[10] = BNE; //compare mem_stack[30] != mem_stack[32]
-	a.mem_stack[11] = 0;   //if match then branch to mem_stack[16]
-	a.mem_stack[12] = 200;
-	a.mem_stack[13] = 0;
-	a.mem_stack[14] = 201;
+	a.mem_stack[9] = 108; //108 is output
+
+	//incrementing
+	a.mem_stack[10] = CLA; //clear the AC
+	a.mem_stack[11] = LDA; //Load the AC with data from mem_stack[100]
+	a.mem_stack[12] = 0;
+	a.mem_stack[13] = 100;
+	a.mem_stack[14] = ADI; //add immediate value to AC
 	a.mem_stack[15] = 0;
-	a.mem_stack[16] = 23;
-	//if branch not match come here
-	a.mem_stack[17] = STA; //store ACC value to mem_stack[35]
+	a.mem_stack[16] = 1;
+	a.mem_stack[17] = STA; //Store the value of AC to memory
 	a.mem_stack[18] = 0;
-	a.mem_stack[19] = 34;
-	a.mem_stack[20] = JMP; //Jump to EOP
+	a.mem_stack[19] = 100;
+
+
+	//branching/loop condition check
+	a.mem_stack[20] = SLT; //if(mem_stack[100] < mem_stack[102]) -> set the flag @ (104) high
 	a.mem_stack[21] = 0;
-	a.mem_stack[22] = 29;
-	//if branch match then jump here
-	a.mem_stack[23] = ADD;
-	a.mem_stack[24] = 0;
-	a.mem_stack[25] = 30;
-	a.mem_stack[26] = STA;
-	a.mem_stack[27] = 0;
-	a.mem_stack[28] = 34;
-	a.mem_stack[29] = EOP;
-
-
-	//static data
+	a.mem_stack[22] = 104;
+	a.mem_stack[23] = 0;
+	a.mem_stack[24] = 100;
+	a.mem_stack[25] = 0;
+	a.mem_stack[26] = 102;
+	//while mem_stack[104] != mem_stack[106]
+	a.mem_stack[27] = BNE;
+	a.mem_stack[28] = 0;
+	a.mem_stack[29] = 104;
 	a.mem_stack[30] = 0;
-	a.mem_stack[31] = 41;
+	a.mem_stack[31] = 106;
 	a.mem_stack[32] = 0;
-	a.mem_stack[33] = 40;
+	a.mem_stack[33] = 0;
+//	//else go to the end
+	a.mem_stack[34] = EOP;
 
-
-	//dynamic data
-
+	//static data [100:]
+	a.mem_stack[100] = 0;//used to multiply
+	a.mem_stack[101] = 0;
+	a.mem_stack[102] = 0;
+	a.mem_stack[103] = 14;
+	a.mem_stack[104] = 0;
+	a.mem_stack[105] = 0;
+	a.mem_stack[106] = 0;
+	a.mem_stack[107] = 0;
+	//output data
+	a.mem_stack[108] = 0;
+	a.mem_stack[109] = 0;
 
 
 	a.emulate(0);
-	printf("%02X ",a.mem_stack[35]);
-	printf("%02X\n",a.mem_stack[34]);
+	printf("%02X ",a.mem_stack[108]);
+	printf("%02X\n",a.mem_stack[109]);
 	return 0;
 }
