@@ -102,14 +102,41 @@ void CPU::emulate(uint16_t start_addr)
 			{
 				AC = AC*fetch(fetch(PC+1));
 				printf("%d\n",AC);
-				PC += 1;
+				PC += 2;
+			}break;
+			case DIV:
+			{
+				printf("%d / %d = ",AC,fetch(fetch(PC+1)));
+				AC = AC / fetch(fetch(PC+1));
+				printf("%d\n",AC);
+				PC += 2;
+			}break;
+			case REM:
+			{
+				printf("%d %% %d = ",AC,fetch(fetch(PC+1)));
+				AC = AC % fetch(fetch(PC+1));
+				printf("%d\n",AC);
+				PC += 2;
 			}break;
 			case SLT:
 			{
 				if(fetch(fetch(PC+3)) < fetch(fetch(PC+5)))
 				{
 					put(fetch(PC+1),1);
-//					printf("%d is less than %d, set memory address %d with 1\n",fetch(fetch(PC+3)),fetch(fetch(PC+5)),fetch(PC+1));
+					printf("%d is less than %d, set memory address %d with 1\n",fetch(fetch(PC+3)),fetch(fetch(PC+5)),fetch(PC+1));
+				}
+				else
+				{
+					put(fetch(PC+1),0);
+				}
+				PC += 6;
+			}break;
+			case LET:
+			{
+				if(fetch(fetch(PC+3)) <= fetch(fetch(PC+5)))
+				{
+					put(fetch(PC+1),1);
+					printf("%d is less than %d, set memory address %d with 1\n",fetch(fetch(PC+3)),fetch(fetch(PC+5)),fetch(PC+1));
 				}
 				else
 				{
@@ -132,12 +159,27 @@ void CPU::emulate(uint16_t start_addr)
 			case JMP:
 			{
 				PC = fetch(PC+1)-1;
+				printf("Jump to Addr : %d\n",PC);
 			}break;
 			case BNE:
 			{
 				REGS[0] = fetch(fetch(PC+1));
 				REGS[1] = fetch(fetch(PC+3));
 				if(REGS[0]!=REGS[1])
+				{
+					PC = fetch(PC+5)-1; //because outside always increment by 1
+//					printf("%d is not equal to %d, set PC to %d\n",REGS[0],REGS[1],PC);
+				}
+				else
+				{
+					PC += 6;
+				}
+			}break;
+			case BEQ:
+			{
+				REGS[0] = fetch(fetch(PC+1));
+				REGS[1] = fetch(fetch(PC+3));
+				if(REGS[0]==REGS[1])
 				{
 					PC = fetch(PC+5)-1; //because outside always increment by 1
 //					printf("%d is not equal to %d, set PC to %d\n",REGS[0],REGS[1],PC);

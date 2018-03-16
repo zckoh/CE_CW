@@ -92,7 +92,7 @@ int main(void)
 	a.mem_stack[100] = 0;//used to multiply
 	a.mem_stack[101] = 0;
 	a.mem_stack[102] = 0;
-	a.mem_stack[103] = 14;
+	a.mem_stack[103] = 100;
 	a.mem_stack[104] = 0;
 	a.mem_stack[105] = 0;
 	a.mem_stack[106] = 0;

@@ -27,11 +27,14 @@ enum opcodes
 	SUB,		//Subtract memory from accumulator (16 bits operation)
 	SBI,		//subtract immediate from accumulator
 	MUL,		//Multiply first operand with ACC
+	DIV,		//Divide value of next address by AC and store in AC
+	REM,		//obtain the remainder of the division of next address by AC and store in AC
 
 	//others
 //	CMP, 		//compare accumulator with mem
 	SLT,		//set temporary registers to high if less than
 	SLI,		//set temporary registers to high if IMM1 less than IMM2
+	LET,		//Less or equal than
 	JMP,		//Jump to location in memory
 	BNE,		//Branch if not equal (A != B)
 	BEQ,		//Branch if equal (A == B)
