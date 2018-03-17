@@ -55,7 +55,7 @@ void CPU::emulate(uint16_t start_addr)
 		{
 			case undefined:
 			{
-				printf("No command detected\n");
+//				printf("No command detected\n");
 			}break;
 			case CLA:
 			{
@@ -73,6 +73,17 @@ void CPU::emulate(uint16_t start_addr)
 			case STA:
 			{
 				put(fetch(PC+1),AC);
+				if(fetch(PC+1) == 208)
+				{
+					if(AC)
+					{
+						printf("%d is a prime number\n",fetch(224));
+					}
+					else
+					{
+						printf("is not a prime number\n");
+					}
+				}
 //				printf("Stored value of AC (%d) to memory address (%d)\n",AC,fetch(PC+1));
 				PC += 2;
 			}break;
@@ -106,16 +117,16 @@ void CPU::emulate(uint16_t start_addr)
 			}break;
 			case DIV:
 			{
-				printf("%d / %d = ",AC,fetch(fetch(PC+1)));
+//				printf("%d / %d = ",AC,fetch(fetch(PC+1)));
 				AC = AC / fetch(fetch(PC+1));
-				printf("%d\n",AC);
+//				printf("%d\n",AC);
 				PC += 2;
 			}break;
 			case REM:
 			{
-				printf("%d %% %d = ",AC,fetch(fetch(PC+1)));
+//				printf("%d %% %d = ",AC,fetch(fetch(PC+1)));
 				AC = AC % fetch(fetch(PC+1));
-				printf("%d\n",AC);
+//				printf("%d\n",AC);
 				PC += 2;
 			}break;
 			case SLT:
@@ -123,7 +134,7 @@ void CPU::emulate(uint16_t start_addr)
 				if(fetch(fetch(PC+3)) < fetch(fetch(PC+5)))
 				{
 					put(fetch(PC+1),1);
-					printf("%d is less than %d, set memory address %d with 1\n",fetch(fetch(PC+3)),fetch(fetch(PC+5)),fetch(PC+1));
+//					printf("%d is less than %d, set memory address %d with 1\n",fetch(fetch(PC+3)),fetch(fetch(PC+5)),fetch(PC+1));
 				}
 				else
 				{
@@ -136,7 +147,7 @@ void CPU::emulate(uint16_t start_addr)
 				if(fetch(fetch(PC+3)) <= fetch(fetch(PC+5)))
 				{
 					put(fetch(PC+1),1);
-					printf("%d is less than %d, set memory address %d with 1\n",fetch(fetch(PC+3)),fetch(fetch(PC+5)),fetch(PC+1));
+//					printf("%d is less or equal to %d, set memory address %d with 1\n",fetch(fetch(PC+3)),fetch(fetch(PC+5)),fetch(PC+1));
 				}
 				else
 				{
@@ -159,7 +170,7 @@ void CPU::emulate(uint16_t start_addr)
 			case JMP:
 			{
 				PC = fetch(PC+1)-1;
-				printf("Jump to Addr : %d\n",PC);
+//				printf("Jump to Addr : %d\n",PC);
 			}break;
 			case BNE:
 			{
