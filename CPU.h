@@ -31,7 +31,6 @@ enum opcodes
 	REM,		//obtain the remainder of the division of next address by AC and store in AC
 
 	//others
-//	CMP, 		//compare accumulator with mem
 	SLT,		//set temporary registers to high if less than
 	SLI,		//set temporary registers to high if IMM1 less than IMM2
 	LET,		//Less or equal than
@@ -58,15 +57,12 @@ public:
 
 	//Additional registers for when need more than 2 bytes in original registers
 	int REGS[7];
-	int temp;
 
 	uint8_t mem_stack[65536];
 
 	uint16_t fetch(uint16_t address);
 	void put(uint16_t address,int value);
-	void increment_counter();
-	void reset();
-	void point_next_address();
+
 
 	void emulate(uint16_t start_addr);
 };

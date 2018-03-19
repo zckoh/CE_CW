@@ -12,14 +12,9 @@ CPU::CPU() {
 	AC = 0;
 	IR = 0;
 	REGS[7] = {0};
-	//Define REGS[0] as zero
-	REGS[0] = 0;
-	//Define REGS[1] as one
-	REGS[1] = 1;
 	mem_stack[65536] = {0};
 	running = false;
 	cmp_flag = false;
-	temp = 0;
 
 }
 
@@ -41,9 +36,6 @@ void CPU::put(uint16_t address,int value)
 void CPU::emulate(uint16_t start_addr)
 {
 	PC = start_addr;
-//	int temp;
-//	long int ltemp;
-
 	running = true;
 
 	while(running)
