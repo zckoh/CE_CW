@@ -5,6 +5,8 @@
  *      Author: zckoh
  */
 
+
+
 #ifndef CPU_H_
 #define CPU_H_
 
@@ -12,6 +14,7 @@
 #include <stdint.h>
 #include <iostream>
 
+extern uint16_t mem_stack[65536];
 
 //define the opcodes
 enum opcodes
@@ -47,23 +50,35 @@ public:
 	CPU();
 
 	//flags
-	bool running;
+	bool running; //check for the program is still running
 	bool cmp_flag;
 
 	//Registers
 	int PC; //Program Counter
 	int AC;	//Accumulator
-	int IR; //Instruction Register
+	uint64_t IR; //Instruction Register
+	uint16_t temp_op; //temporary variable to store the current opcode to be executed
 
-	//Additional registers for when need more than 2 bytes in original registers
+	//Additional registers in CPU
 	int REGS[7];
 
-	uint8_t mem_stack[65536];
-
+	//memory access functions
 	uint16_t fetch(uint16_t address);
 	void put(uint16_t address,int value);
 
+	//functions for fetch step
+	uint64_t fetch_instruction(uint16_t address);
+	void fetch_step();
 
+	//functions for decode step
+	uint16_t fetch_operand(int value);
+	uint16_t fetch_opcode();
+	void decode_step();
+
+	//functions for execute step
+	void execute();
+
+	//emulate the computer starting from start_addr
 	void emulate(uint16_t start_addr);
 };
 

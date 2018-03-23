@@ -6,11 +6,13 @@
  */
 
 #include "CPU.h"
+#define DEBUG
 
 CPU::CPU() {
 	PC = 0;
 	AC = 0;
 	IR = 0;
+	temp_op = 0;
 	REGS[7] = {0};
 	mem_stack[65536] = {0};
 	running = false;
@@ -22,16 +24,270 @@ CPU::CPU() {
 //first byte is for MSB of 16 bits
 uint16_t CPU::fetch(uint16_t address)
 {
-	return mem_stack[address]*256 + mem_stack[address+1];
+	return mem_stack[address];
 }
 
 //Puts the 16 bits value into 2 bytes in memory
 //Start from LSB of 16 bits
 void CPU::put(uint16_t address,int value)
 {
-	mem_stack[address] = (uint8_t)((value & 0xFF00) >> 8);
-	mem_stack[address+1] = (uint8_t)(value & 0x00FF);
+	mem_stack[address] = value;
 }
+
+
+//fetch the instruction (16+16+16+16 bits)
+uint64_t CPU::fetch_instruction(uint16_t address)
+{
+	uint64_t opcode = mem_stack[address];
+	uint64_t operand1 = mem_stack[address+1];
+	uint64_t operand2 = mem_stack[address+2];
+	uint64_t operand3 = mem_stack[address+3];
+	return (uint64_t)(opcode<<48 | operand1<<32 | operand2<<16 | operand3);
+}
+
+//fetch instruction from text segment
+void CPU::fetch_step()
+{
+	//store the fetched instruction in IR
+	IR = fetch_instruction(PC);
+	//increments the PC
+	PC+=4;
+}
+
+//fetch the operand of value from IR
+uint16_t CPU::fetch_operand(int value)
+{
+	if(value==1) //operand 1
+	{
+		return (uint16_t)(IR>>32) & 0xffff;
+	}
+	else if(value==2) //operand 2
+	{
+		return (uint16_t)(IR>>16) & 0xffff;
+	}
+	else if (value==3) //operand3
+	{
+		return (uint16_t)(IR) & 0xffff;
+	}
+	else
+	{
+		return 0;
+	}
+}
+
+//fetch opcode from IR
+uint16_t CPU::fetch_opcode()
+{
+	return (uint16_t)(IR>>48);
+}
+
+//store the opcode in temp_op
+void CPU::decode_step()
+{
+	temp_op = fetch_opcode();
+}
+
+
+//execute instruction based from temp_op
+void CPU::execute()
+{
+	switch(temp_op)
+	{
+		case undefined:
+		{
+#ifdef DEBUG
+			printf("No command detected\n");
+#endif
+		}break;
+		case CLA:
+		{
+			AC = 0;
+#ifdef DEBUG
+			printf("Cleared accumulator, AC = %d\n",AC);
+#endif
+		}break;
+		case LDA:
+		{
+			AC = fetch(fetch_operand(1));
+#ifdef DEBUG
+			printf("Fetched Data to AC, AC = %d\n",AC);
+#endif
+		}break;
+		case STA:
+		{
+			put(fetch_operand(1),AC);
+#ifdef DEBUG
+			if(fetch_operand(1) == 208)
+			{
+				if(AC)
+				{
+					printf("%d is a prime number\n",fetch(224));
+				}
+				else
+				{
+					printf("is not a prime number\n");
+				}
+			}
+			printf("Stored value of AC (%d) to memory\n",AC);
+#endif
+		}break;
+		case ADD:
+		{
+			AC = AC + fetch(fetch_operand(1));
+			//increment to next instruction
+#ifdef DEBUG
+			printf("Add to AC, AC = %d\n",AC);
+#endif
+		}break;
+		case ADI:
+		{
+			AC = AC + fetch_operand(1);
+#ifdef DEBUG
+			printf("Add immediate value to AC, AC = %d\n",AC);
+#endif
+		}break;
+		case SUB:
+		{
+			AC = AC - fetch(fetch_operand(1));
+#ifdef DEBUG
+			printf("Subtract from AC, AC = %d\n",AC);
+#endif
+		}break;
+		case SBI:
+		{
+			AC = AC - fetch_operand(1);
+#ifdef DEBUG
+			printf("Subtract immediate value from AC, AC = %d\n",AC);
+#endif
+		}break;
+		case MUL:
+		{
+			AC = AC*fetch(fetch_operand(1));
+#ifdef DEBUG
+			printf("Multiply wtih AC, AC = %d\n",AC);
+#endif
+		}break;
+		case DIV:
+		{
+#ifdef DEBUG
+			printf("%d (before division)\n ",AC);
+#endif
+			AC = AC / fetch(fetch_operand(1));
+#ifdef DEBUG
+			printf("%d (after division\n",AC);
+#endif
+		}break;
+		case REM:
+		{
+			AC = AC % fetch(fetch_operand(1));
+#ifdef DEBUG
+			printf("REM in AC = %d\n",AC);
+#endif
+		}break;
+		case SLT:
+		{
+			if(fetch(fetch_operand(2)) < fetch(fetch_operand(3)))
+			{
+				put(fetch_operand(1),1);
+#ifdef DEBUG
+				printf("satisfied the SLT condition,setting operand 1 to 1\n");
+#endif
+			}
+			else
+			{
+				put(fetch_operand(1),0);
+#ifdef DEBUG
+				printf("did not satisfied the SLT condition, setting operand 1 to 0\n");
+#endif
+			}
+		}break;
+		case LET:
+		{
+			if(fetch(fetch_operand(2)) <= fetch(fetch_operand(3)))
+			{
+				put(fetch_operand(1),1);
+#ifdef DEBUG
+				printf("satisfied the LET condition, setting operand 1 to 1\n");
+#endif
+			}
+			else
+			{
+				put(fetch_operand(1),0);
+#ifdef DEBUG
+				printf("did not satisfy the LET condition, setting operand 1 to 0\n");
+#endif
+			}
+		}break;
+		case SLI:
+		{
+			if(fetch_operand(2)<fetch_operand(3))
+			{
+				put(fetch_operand(1),1);
+#ifdef DEBUG
+				printf("satisfied the SLI condition, setting operand 1 to 1\n");
+#endif
+			}
+			else
+			{
+				put(fetch_operand(1),0);
+#ifdef DEBUG
+				printf("did not satisfy the SLI condition, setting operand 1 to 0\n");
+#endif
+			}
+		}break;
+		case JMP:
+		{
+			PC = fetch_operand(1);
+#ifdef DEBUG
+			printf("Jump to Addr : %d\n",PC);
+#endif
+		}break;
+		case BNE:
+		{
+			REGS[0] = fetch(fetch_operand(1));
+			REGS[1] = fetch(fetch_operand(2));
+			if(REGS[0]!=REGS[1])
+			{
+				PC = fetch_operand(3); //because outside always increment by 1
+#ifdef DEBUG
+				printf("operand 1 != operand 2, set PC to operand 3\n");
+#endif
+			}
+			else
+			{
+#ifdef DEBUG
+				printf("operand 1 == operand 2, set PC to operand 3\n");
+#endif
+			}
+		}break;
+		case BEQ:
+		{
+			REGS[0] = fetch(fetch_operand(1));
+			REGS[1] = fetch(fetch_operand(2));
+			if(REGS[0]==REGS[1])
+			{
+				PC = fetch_operand(3);
+#ifdef DEBUG
+				printf("operand 1 == operand 2, set PC to operand 3\n");
+#endif
+			}
+			else
+			{
+#ifdef DEBUG
+				printf("operand 1 != operand 2, set PC to operand 3\n");
+#endif
+			}
+		}break;
+		case EOP:
+		{
+			running = false;
+#ifdef DEBUG
+			printf("End of program reached\n");
+#endif
+		}break;
+	}
+}
+
 
 void CPU::emulate(uint16_t start_addr)
 {
@@ -40,165 +296,13 @@ void CPU::emulate(uint16_t start_addr)
 
 	while(running)
 	{
-		//fetch instruction & store in IR
-		IR = mem_stack[PC];
-		//check IR (decode)
-		switch (IR)
-		{
-			case undefined:
-			{
-//				printf("No command detected\n");
-			}break;
-			case CLA:
-			{
-				AC = 0;
-//				printf("Cleared accumulator, AC = %d\n",AC);
-			}break;
-			//Execute its task
-			case LDA:
-			{
-				AC = fetch(fetch(PC+1));
-				//point PC to next instruction
-//				printf("Fetched Data to AC, AC = %d\n",AC);
-				PC += 2;
-			}break;
-			case STA:
-			{
-				put(fetch(PC+1),AC);
-				if(fetch(PC+1) == 208)
-				{
-					if(AC)
-					{
-						printf("%d is a prime number\n",fetch(224));
-					}
-					else
-					{
-						printf("is not a prime number\n");
-					}
-				}
-//				printf("Stored value of AC (%d) to memory address (%d)\n",AC,fetch(PC+1));
-				PC += 2;
-			}break;
-			case ADD:
-			{
-				AC = AC + fetch(fetch(PC+1));
-				//increment to next instruction
-				PC += 2;
-			}break;
-			case ADI:
-			{
-				AC = AC + fetch(PC+1);
-//				printf("Add immediate value to AC, AC = %d\n",AC);
-				PC += 2;
-			}break;
-			case SUB:
-			{
-				AC = AC - fetch(fetch(PC+1));
-				PC += 2;
-			}break;
-			case SBI:
-			{
-				AC = AC - fetch(PC+1);
-				PC += 2;
-			}break;
-			case MUL:
-			{
-				AC = AC*fetch(fetch(PC+1));
-				printf("%d\n",AC);
-				PC += 2;
-			}break;
-			case DIV:
-			{
-//				printf("%d / %d = ",AC,fetch(fetch(PC+1)));
-				AC = AC / fetch(fetch(PC+1));
-//				printf("%d\n",AC);
-				PC += 2;
-			}break;
-			case REM:
-			{
-//				printf("%d %% %d = ",AC,fetch(fetch(PC+1)));
-				AC = AC % fetch(fetch(PC+1));
-//				printf("%d\n",AC);
-				PC += 2;
-			}break;
-			case SLT:
-			{
-				if(fetch(fetch(PC+3)) < fetch(fetch(PC+5)))
-				{
-					put(fetch(PC+1),1);
-//					printf("%d is less than %d, set memory address %d with 1\n",fetch(fetch(PC+3)),fetch(fetch(PC+5)),fetch(PC+1));
-				}
-				else
-				{
-					put(fetch(PC+1),0);
-				}
-				PC += 6;
-			}break;
-			case LET:
-			{
-				if(fetch(fetch(PC+3)) <= fetch(fetch(PC+5)))
-				{
-					put(fetch(PC+1),1);
-//					printf("%d is less or equal to %d, set memory address %d with 1\n",fetch(fetch(PC+3)),fetch(fetch(PC+5)),fetch(PC+1));
-				}
-				else
-				{
-					put(fetch(PC+1),0);
-				}
-				PC += 6;
-			}break;
-			case SLI:
-			{
-				if(fetch(PC+3)<fetch(PC+5))
-				{
-					put(fetch(PC+1),1);
-				}
-				else
-				{
-					put(fetch(PC+1),0);
-				}
-				PC += 6;
-			}break;
-			case JMP:
-			{
-				PC = fetch(PC+1)-1;
-//				printf("Jump to Addr : %d\n",PC);
-			}break;
-			case BNE:
-			{
-				REGS[0] = fetch(fetch(PC+1));
-				REGS[1] = fetch(fetch(PC+3));
-				if(REGS[0]!=REGS[1])
-				{
-					PC = fetch(PC+5)-1; //because outside always increment by 1
-//					printf("%d is not equal to %d, set PC to %d\n",REGS[0],REGS[1],PC);
-				}
-				else
-				{
-					PC += 6;
-				}
-			}break;
-			case BEQ:
-			{
-				REGS[0] = fetch(fetch(PC+1));
-				REGS[1] = fetch(fetch(PC+3));
-				if(REGS[0]==REGS[1])
-				{
-					PC = fetch(PC+5)-1; //because outside always increment by 1
-//					printf("%d is not equal to %d, set PC to %d\n",REGS[0],REGS[1],PC);
-				}
-				else
-				{
-					PC += 6;
-				}
-			}break;
-			case EOP:
-			{
-				running = false;
-			}break;
+		//fetch steps
+		fetch_step();
+		//decode
+		decode_step();
+		//execute
+		execute();
 
-		}
-		PC ++;
 	}
 	//Write back
 
