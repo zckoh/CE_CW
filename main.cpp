@@ -17,6 +17,7 @@
 //Single memory space (64kB Memory unit)
 uint16_t mem_stack[65536] = {0};
 
+FILE *fp;
 
 int main(void)
 {
@@ -84,7 +85,22 @@ int main(void)
 	//output data
 	mem_stack[1008] = 0;
 
+
+
+	char filename[] = "C:/Users/zckoh/Desktop/ELEC2204_coursework/CE_CW/debug.txt";
+	fp = fopen(filename, "w");
+	if (fp == NULL) {
+	  fprintf(stderr, "Can't open output file %s!\n",
+			  filename);
+	  exit(1);
+	}
+
+
+
 	A.emulate(0);
+
+	fclose(fp);
+
 //	printf("test uint64_t : %" PRIx64 "\n", a.fetch_instruction(0));
 //	printf("operand %d = %d\n",2,a.fetch_operand(4));
 	//	printf("%" PRIu64 "\n", );

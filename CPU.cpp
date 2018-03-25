@@ -14,9 +14,7 @@ CPU::CPU() {
 	IR = 0;
 	temp_op = 0;
 	REGS[7] = {0};
-	mem_stack[65536] = {0};
 	running = false;
-	cmp_flag = false;
 
 }
 
@@ -27,9 +25,9 @@ uint16_t CPU::fetch(uint16_t address)
 	return mem_stack[address];
 }
 
-//Puts the 16 bits value into 2 bytes in memory
+//Puts the 16 bits value into memory
 //Start from LSB of 16 bits
-void CPU::put(uint16_t address,int value)
+void CPU::put(uint16_t address,uint16_t value)
 {
 	mem_stack[address] = value;
 }
@@ -55,7 +53,7 @@ void CPU::fetch_step()
 }
 
 //fetch the operand of value from IR
-uint16_t CPU::fetch_operand(int value)
+uint16_t CPU::fetch_operand(uint16_t value)
 {
 	if(value==1) //operand 1
 	{
@@ -89,7 +87,7 @@ void CPU::decode_step()
 
 
 //execute instruction based from temp_op
-void CPU::execute()
+void CPU::execute_step()
 {
 	switch(temp_op)
 	{
@@ -97,6 +95,7 @@ void CPU::execute()
 		{
 #ifdef DEBUG
 			printf("No command detected\n");
+			fprintf(fp,"No command detected\n");
 #endif
 		}break;
 		case CLA:
@@ -104,6 +103,7 @@ void CPU::execute()
 			AC = 0;
 #ifdef DEBUG
 			printf("Cleared accumulator, AC = %d\n",AC);
+			fprintf(fp,"Cleared accumulator, AC = %d\n",AC);
 #endif
 		}break;
 		case LDA:
@@ -111,6 +111,7 @@ void CPU::execute()
 			AC = fetch(fetch_operand(1));
 #ifdef DEBUG
 			printf("Fetched Data to AC, AC = %d\n",AC);
+			fprintf(fp,"Fetched Data to AC, AC = %d\n",AC);
 #endif
 		}break;
 		case STA:
@@ -122,13 +123,16 @@ void CPU::execute()
 				if(AC)
 				{
 					printf("%d is a prime number\n",fetch(224));
+					fprintf(fp,"%d is a prime number\n",fetch(224));
 				}
 				else
 				{
 					printf("is not a prime number\n");
+					fprintf(fp,"is not a prime number\n");
 				}
 			}
 			printf("Stored value of AC (%d) to memory\n",AC);
+			fprintf(fp,"Stored value of AC (%d) to memory\n",AC);
 #endif
 		}break;
 		case ADD:
@@ -137,6 +141,7 @@ void CPU::execute()
 			//increment to next instruction
 #ifdef DEBUG
 			printf("Add to AC, AC = %d\n",AC);
+			fprintf(fp,"Add to AC, AC = %d\n",AC);
 #endif
 		}break;
 		case ADI:
@@ -144,6 +149,7 @@ void CPU::execute()
 			AC = AC + fetch_operand(1);
 #ifdef DEBUG
 			printf("Add immediate value to AC, AC = %d\n",AC);
+			fprintf(fp,"Add immediate value to AC, AC = %d\n",AC);
 #endif
 		}break;
 		case SUB:
@@ -151,6 +157,7 @@ void CPU::execute()
 			AC = AC - fetch(fetch_operand(1));
 #ifdef DEBUG
 			printf("Subtract from AC, AC = %d\n",AC);
+			fprintf(fp,"Subtract from AC, AC = %d\n",AC);
 #endif
 		}break;
 		case SBI:
@@ -158,6 +165,7 @@ void CPU::execute()
 			AC = AC - fetch_operand(1);
 #ifdef DEBUG
 			printf("Subtract immediate value from AC, AC = %d\n",AC);
+			fprintf(fp,"Subtract immediate value from AC, AC = %d\n",AC);
 #endif
 		}break;
 		case MUL:
@@ -165,16 +173,19 @@ void CPU::execute()
 			AC = AC*fetch(fetch_operand(1));
 #ifdef DEBUG
 			printf("Multiply wtih AC, AC = %d\n",AC);
+			fprintf(fp,"Multiply wtih AC, AC = %d\n",AC);
 #endif
 		}break;
 		case DIV:
 		{
 #ifdef DEBUG
 			printf("%d (before division)\n ",AC);
+			fprintf(fp,"%d (before division)\n ",AC);
 #endif
 			AC = AC / fetch(fetch_operand(1));
 #ifdef DEBUG
 			printf("%d (after division\n",AC);
+			fprintf(fp,"%d (after division\n",AC);
 #endif
 		}break;
 		case REM:
@@ -182,6 +193,7 @@ void CPU::execute()
 			AC = AC % fetch(fetch_operand(1));
 #ifdef DEBUG
 			printf("REM in AC = %d\n",AC);
+			fprintf(fp,"REM in AC = %d\n",AC);
 #endif
 		}break;
 		case SLT:
@@ -191,6 +203,7 @@ void CPU::execute()
 				put(fetch_operand(1),1);
 #ifdef DEBUG
 				printf("satisfied the SLT condition,setting operand 1 to 1\n");
+				fprintf(fp,"satisfied the SLT condition,setting operand 1 to 1\n");
 #endif
 			}
 			else
@@ -198,6 +211,7 @@ void CPU::execute()
 				put(fetch_operand(1),0);
 #ifdef DEBUG
 				printf("did not satisfied the SLT condition, setting operand 1 to 0\n");
+				fprintf(fp,"did not satisfied the SLT condition, setting operand 1 to 0\n");
 #endif
 			}
 		}break;
@@ -208,6 +222,7 @@ void CPU::execute()
 				put(fetch_operand(1),1);
 #ifdef DEBUG
 				printf("satisfied the LET condition, setting operand 1 to 1\n");
+				fprintf(fp,"satisfied the LET condition, setting operand 1 to 1\n");
 #endif
 			}
 			else
@@ -215,6 +230,7 @@ void CPU::execute()
 				put(fetch_operand(1),0);
 #ifdef DEBUG
 				printf("did not satisfy the LET condition, setting operand 1 to 0\n");
+				fprintf(fp,"did not satisfy the LET condition, setting operand 1 to 0\n");
 #endif
 			}
 		}break;
@@ -225,6 +241,7 @@ void CPU::execute()
 				put(fetch_operand(1),1);
 #ifdef DEBUG
 				printf("satisfied the SLI condition, setting operand 1 to 1\n");
+				fprintf(fp,"satisfied the SLI condition, setting operand 1 to 1\n");
 #endif
 			}
 			else
@@ -232,6 +249,7 @@ void CPU::execute()
 				put(fetch_operand(1),0);
 #ifdef DEBUG
 				printf("did not satisfy the SLI condition, setting operand 1 to 0\n");
+				fprintf(fp,"did not satisfy the SLI condition, setting operand 1 to 0\n");
 #endif
 			}
 		}break;
@@ -240,6 +258,7 @@ void CPU::execute()
 			PC = fetch_operand(1);
 #ifdef DEBUG
 			printf("Jump to Addr : %d\n",PC);
+			fprintf(fp,"Jump to Addr : %d\n",PC);
 #endif
 		}break;
 		case BNE:
@@ -251,12 +270,14 @@ void CPU::execute()
 				PC = fetch_operand(3); //because outside always increment by 1
 #ifdef DEBUG
 				printf("operand 1 != operand 2, set PC to operand 3\n");
+				fprintf(fp,"operand 1 != operand 2, set PC to operand 3\n");
 #endif
 			}
 			else
 			{
 #ifdef DEBUG
 				printf("operand 1 == operand 2, set PC to operand 3\n");
+				fprintf(fp,"operand 1 == operand 2, set PC to operand 3\n");
 #endif
 			}
 		}break;
@@ -269,12 +290,14 @@ void CPU::execute()
 				PC = fetch_operand(3);
 #ifdef DEBUG
 				printf("operand 1 == operand 2, set PC to operand 3\n");
+				fprintf(fp,"operand 1 == operand 2, set PC to operand 3\n");
 #endif
 			}
 			else
 			{
 #ifdef DEBUG
 				printf("operand 1 != operand 2, set PC to operand 3\n");
+				fprintf(fp,"operand 1 != operand 2, set PC to operand 3\n");
 #endif
 			}
 		}break;
@@ -283,6 +306,7 @@ void CPU::execute()
 			running = false;
 #ifdef DEBUG
 			printf("End of program reached\n");
+			fprintf(fp,"End of program reached\n");
 #endif
 		}break;
 	}
@@ -296,16 +320,13 @@ void CPU::emulate(uint16_t start_addr)
 
 	while(running)
 	{
-		//fetch steps
+		//fetch_flag
+
 		fetch_step();
 		//decode
 		decode_step();
 		//execute
-		execute();
-
+		execute_step();
 	}
-	//Write back
-
-
 }
 

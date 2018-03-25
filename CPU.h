@@ -15,6 +15,7 @@
 #include <iostream>
 
 extern uint16_t mem_stack[65536];
+extern 	FILE *fp;
 
 //define the opcodes
 enum opcodes
@@ -33,15 +34,17 @@ enum opcodes
 	DIV,		//Divide value of next address by AC and store in AC
 	REM,		//obtain the remainder of the division of next address by AC and store in AC
 
+	//program flow control
+	JMP,		//Jump to location in memory
+	BNE,		//Branch if not equal (A != B)
+	BEQ,		//Branch if equal (A == B)
+
 	//others
 	SLT,		//set temporary registers to high if less than
 	SLI,		//set temporary registers to high if IMM1 less than IMM2
 	LET,		//Less or equal than
-	JMP,		//Jump to location in memory
-	BNE,		//Branch if not equal (A != B)
-	BEQ,		//Branch if equal (A == B)
 	CLA,		//clear accumulator
-	EOP,		 	//End of Program
+	EOP,		//End of Program
 };
 
 class CPU{
@@ -51,32 +54,31 @@ public:
 
 	//flags
 	bool running; //check for the program is still running
-	bool cmp_flag;
 
 	//Registers
-	int PC; //Program Counter
-	int AC;	//Accumulator
+	uint16_t PC; //Program Counter
+	uint16_t AC;	//Accumulator
 	uint64_t IR; //Instruction Register
 	uint16_t temp_op; //temporary variable to store the current opcode to be executed
 
 	//Additional registers in CPU
-	int REGS[7];
+	uint16_t REGS[7];
 
 	//memory access functions
 	uint16_t fetch(uint16_t address);
-	void put(uint16_t address,int value);
+	void put(uint16_t address,uint16_t value);
 
 	//functions for fetch step
 	uint64_t fetch_instruction(uint16_t address);
 	void fetch_step();
 
 	//functions for decode step
-	uint16_t fetch_operand(int value);
+	uint16_t fetch_operand(uint16_t value);
 	uint16_t fetch_opcode();
 	void decode_step();
 
 	//functions for execute step
-	void execute();
+	void execute_step();
 
 	//emulate the computer starting from start_addr
 	void emulate(uint16_t start_addr);
