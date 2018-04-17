@@ -118,12 +118,12 @@ void CPU::execute_step()
 		{
 			put(fetch_operand(1),AC);
 #ifdef DEBUG
-			if(fetch_operand(1) == 208)
+			if(fetch_operand(1) == 1004)
 			{
 				if(AC)
 				{
-					printf("%d is a prime number\n",fetch(224));
-					fprintf(fp,"%d is a prime number\n",fetch(224));
+					printf("%d is a prime number\n",fetch(1012));
+					fprintf(fp,"%d is a prime number\n",fetch(1012));
 				}
 				else
 				{

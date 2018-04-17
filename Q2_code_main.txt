@@ -1,0 +1,226 @@
+/*
+ * main.cpp
+ *
+ *  Created on: Mar 2, 2018
+ *      Author: zckoh
+ */
+
+
+
+
+#include <stdio.h>
+#include <math.h>
+#include "CPU.h"
+#define __STDC_FORMAT_MACROS 1
+#include <inttypes.h>
+
+//Single memory space (64kB Memory unit)
+uint16_t mem_stack[65536] = {0};
+
+FILE *fp;
+
+int main(void)
+{
+
+	CPU A;
+
+	//Define what is inside the memory (flashing in the program)
+	//program code
+
+	//incrementing
+	mem_stack[0] = CLA; //clear the AC
+	mem_stack[1] = 0;
+	mem_stack[2] = 0;
+	mem_stack[3] = 0;
+	mem_stack[4] = LDA; //Load the AC with data from mem_stack[1000]
+	mem_stack[5] = 1000;
+	mem_stack[6] = 0;
+	mem_stack[7] = 0;
+	mem_stack[8] = ADI; //add immediate value to AC
+	mem_stack[9] = 1;
+	mem_stack[10] = 0;
+	mem_stack[11] = 0;
+	mem_stack[12] = STA; //Store the value of AC to memory
+	mem_stack[13] = 1000;
+	mem_stack[14] = 0;
+	mem_stack[15] = 0;
+
+
+	//set i = 1 (mem_stack[1005])
+	mem_stack[16] = CLA;
+	mem_stack[17] = 0;
+	mem_stack[18] = 0;
+	mem_stack[19] = 0;
+	mem_stack[20] = ADI;
+	mem_stack[21] = 1;
+	mem_stack[22] = 0;
+	mem_stack[23] = 0;
+	mem_stack[24] = STA;
+	mem_stack[25] = 1005;
+	mem_stack[26] = 0;
+	mem_stack[27] = 0;
+	//set the remainder = 0
+
+	//clear the AC
+	mem_stack[28] = CLA;
+	mem_stack[29] = 0;
+	mem_stack[30] = 0;
+	mem_stack[31] = 0;
+	mem_stack[32] = LDA; //load the numerator (mem_stack[1000]) into AC
+	mem_stack[33] = 1000;
+	mem_stack[34] = 0;
+	mem_stack[35] = 0;
+	mem_stack[36] = REM; //get the remainder of the division by mem_stack[1005]
+	mem_stack[37] = 1005;
+	mem_stack[38] = 0;
+	mem_stack[39] = 0;
+	mem_stack[40] = STA; //store the remainder to mem_stack[1006]
+	mem_stack[41] = 1006;
+	mem_stack[42] = 0;
+	mem_stack[43] = 0;
+
+	//if remainder == 0
+	mem_stack[44] = BEQ;
+	mem_stack[45] = 1006;
+	mem_stack[46] = 1008; //This is zero (mem_stack[1008]
+	mem_stack[47] = 52; //branch to 52 to increment the prime counter
+	//else //dont increment, move on to
+	mem_stack[48] = JMP;
+	mem_stack[49] = 68;
+	mem_stack[50] = 0;
+	mem_stack[51] = 0;
+
+
+	//incrementing the prime counter (mem_stack[1010])
+	mem_stack[52] = CLA;
+	mem_stack[53] = 0;
+	mem_stack[54] = 0;
+	mem_stack[55] = 0;
+	mem_stack[56] = LDA;
+	mem_stack[57] = 1010;
+	mem_stack[58] = 0;
+	mem_stack[59] = 0;
+	mem_stack[60] = ADI;
+	mem_stack[61] = 1;
+	mem_stack[62] = 0;
+	mem_stack[63] = 0;
+	mem_stack[64] = STA;
+	mem_stack[65] = 1010;
+	mem_stack[66] = 0;
+	mem_stack[67] = 0;
+
+	//increment a counter
+	mem_stack[68] = CLA; //increment i by 1
+	mem_stack[69] = 0;
+	mem_stack[70] = 0;
+	mem_stack[71] = 0;
+	mem_stack[72] = LDA;
+	mem_stack[73] = 1005;
+	mem_stack[74] = 0;
+	mem_stack[75] = 0;
+	mem_stack[76] = ADI;
+	mem_stack[77] = 1;
+	mem_stack[78] = 0;
+	mem_stack[79] = 0;
+	mem_stack[80] = STA;
+	mem_stack[81] = 1005;
+	mem_stack[82] = 0;
+	mem_stack[83] = 0;
+
+	//loop condition check
+	mem_stack[84] = LET; //if(i<=n)
+	mem_stack[85] = 1009;  //flag at mem_stack[1009]
+	mem_stack[86] = 1005;
+	mem_stack[87] = 1000;
+	mem_stack[88] = BNE;
+	mem_stack[89] = 1009;
+	mem_stack[90] = 1008; //mem_stack[1008] is constantly zero
+	mem_stack[91] = 28; //go back to compare with other numbers
+
+	//now check the counter if is equal to 2
+	mem_stack[92] = BNE;
+	mem_stack[93] = 1010;
+	mem_stack[94] = 1011;
+	mem_stack[95] = 120;
+
+	mem_stack[96] = CLA;
+	mem_stack[97] = 0;
+	mem_stack[98] = 0;
+	mem_stack[99] = 0;
+	mem_stack[100] = LDA;   //Store the current prime number in another memory to be printed out
+	mem_stack[101] = 1000;
+	mem_stack[102] = 0;
+	mem_stack[103] = 0;
+	mem_stack[104] = STA;
+	mem_stack[105] = 1012;
+	mem_stack[106] = 0;
+	mem_stack[107] = 0;
+
+	mem_stack[108] = CLA; //if equal to 2, output high at mem_stack[208]
+	mem_stack[109] = 0;
+	mem_stack[110] = 0;
+	mem_stack[111] = 0;
+	mem_stack[112] = ADI;
+	mem_stack[113] = 1;
+	mem_stack[114] = 0;
+	mem_stack[115] = 0;
+	mem_stack[116] = STA;
+	mem_stack[117] = 1004;
+	mem_stack[118] = 0;
+	mem_stack[119] = 0;
+
+	//clear the prime counter after determining if is prime number or not
+	mem_stack[120] = CLA;
+	mem_stack[121] = 0;
+	mem_stack[122] = 0;
+	mem_stack[123] = 0;
+	mem_stack[124] = STA;
+	mem_stack[125] = 1010;
+	mem_stack[126] = 0;
+	mem_stack[127] = 0;
+	//branching/loop condition check
+	mem_stack[128] = SLT; //if(mem_stack[1000] < mem_stack[1001]) -> set the flag @ (1002) high
+	mem_stack[129] = 1002;
+	mem_stack[130] = 1000;
+	mem_stack[131] = 1001;
+	//while mem_stack[1002] != mem_stack[1003]
+	mem_stack[132] = BNE;
+	mem_stack[133] = 1002;
+	mem_stack[134] = 1003;
+	mem_stack[135] = 0;
+	//else go to the end
+	mem_stack[136] = EOP;
+	mem_stack[137] = 0;
+	mem_stack[138] = 0;
+	mem_stack[139] = 0;
+
+	//static data [1000:]
+	mem_stack[1000] = 1;//used to multiply
+	mem_stack[1001] = 100; //limit of the program (99 for Q2)
+	mem_stack[1002] = 0;
+	mem_stack[1003] = 0;
+	//output data
+	mem_stack[1004] = 0;
+
+	mem_stack[1005] = 1; //i for incrementing the inner for loop
+	mem_stack[1006] = 0; //remainder
+	mem_stack[1007] = 1; //constantly 1 (to compare with when using beq in finding prime number
+	mem_stack[1008] = 0; //constantly 0 (to compare with BEQ when finding prime number
+	mem_stack[1009] = 0; //flag for loop condition (inner)
+	mem_stack[1010] = 0; //counter for no of remainders which is 0
+	mem_stack[1011] = 2; //only 2 maximum
+	mem_stack[1012] = 0; // to store the current prime number (to be printed out)
+
+	char filename[] = "C:/Users/zckoh/Desktop/ELEC2204_coursework/CE_CW/Q2_debug_output.txt";
+	fp = fopen(filename, "w");
+	if (fp == NULL) {
+	  fprintf(stderr, "Can't open output file %s!\n",
+			  filename);
+	  exit(1);
+	}
+
+	A.emulate(0);
+	fclose(fp);
+	printf("%02X\n",mem_stack[1004]);
+	return 0;
+}
