@@ -1,0 +1,127 @@
+/*
+ * main.cpp
+ *
+ *  Created on: Mar 2, 2018
+ *      Author: zckoh
+ */
+
+
+
+
+#include <stdio.h>
+#include <math.h>
+#include "CPU.h"
+#define __STDC_FORMAT_MACROS 1
+#include <inttypes.h>
+
+//Single memory space (64kB Memory unit)
+uint16_t mem_stack[65536] = {0};
+
+FILE *fp;
+
+int main(void)
+{
+
+	CPU A;
+
+	//Define what is inside the memory (flashing in the program)
+	//program code
+
+	mem_stack[0] = ADD; //add 20 from address 1000 to AC
+	mem_stack[1] = 1000;
+	mem_stack[2] = 0;
+	mem_stack[3] = 0;
+	mem_stack[4] = STA; //Store to address 1010
+	mem_stack[5] = 1010;
+	mem_stack[6] = 0;
+	mem_stack[7] = 0;
+
+	mem_stack[8] = ADI; //Add 88 to AC
+	mem_stack[9] = 88;
+	mem_stack[10] = 0;
+	mem_stack[11] = 0;
+	mem_stack[12] = STA; //store to address 1011
+	mem_stack[13] = 1011;
+	mem_stack[14] = 0;
+	mem_stack[15] = 0;
+
+	mem_stack[16] = SUB; //sub 16 which is from address 1000 from AC
+	mem_stack[17] = 1001;
+	mem_stack[18] = 0;
+	mem_stack[19] = 0;
+	mem_stack[20] = STA; //store to address 1012
+	mem_stack[21] = 1012;
+	mem_stack[22] = 0;
+	mem_stack[23] = 0;
+
+	mem_stack[24] = SBI; //sub 27 from AC
+	mem_stack[25] = 27;
+	mem_stack[26] = 0;
+	mem_stack[27] = 0;
+	mem_stack[28] = STA; //store to address 1013
+	mem_stack[29] = 1013;
+	mem_stack[30] = 0;
+	mem_stack[31] = 0;
+
+	mem_stack[32] = MUL; //multiply 12 with AC
+	mem_stack[33] = 1002;
+	mem_stack[34] = 0;
+	mem_stack[35] = 0;
+	mem_stack[36] = STA; //store to address 1014
+	mem_stack[37] = 1014;
+	mem_stack[38] = 0;
+	mem_stack[39] = 0;
+
+	mem_stack[40] = DIV; //divide by 2
+	mem_stack[41] = 1003;
+	mem_stack[42] = 0;
+	mem_stack[43] = 0;
+	mem_stack[44] = STA; //store to address 1015
+	mem_stack[45] = 1015;
+	mem_stack[46] = 0;
+	mem_stack[47] = 0;
+
+	mem_stack[48] = REM; //get remainder of divide by 8 with AC
+	mem_stack[49] = 1004;
+	mem_stack[50] = 0;
+	mem_stack[51] = 0;
+	mem_stack[52] = STA;
+	mem_stack[53] = 1016;
+	mem_stack[54] = 0;
+	mem_stack[55] = 0;
+
+	mem_stack[56] = EOP; //finish the program
+	mem_stack[57] = 0;
+	mem_stack[58] = 0;
+	mem_stack[59] = 0;
+//==========================================================================================
+	//static data [1000:]
+	mem_stack[1000] = 20;//for testing ADD
+	mem_stack[1001] = 16;// for testing SUB
+	mem_stack[1002] = 12;//for testing MUL
+	mem_stack[1003] = 2;//for testing DIV
+	mem_stack[1004] = 8;//for testing REM
+
+
+	char filename[] = "C:/Users/zckoh/Desktop/ELEC2204_coursework/CE_CW/arithemtic_debug_output.txt";
+	fp = fopen(filename, "w");
+	if (fp == NULL) {
+	  fprintf(stderr, "Can't open output file %s!\n",
+			  filename);
+	  exit(1);
+	}
+
+	A.emulate(0);
+
+	fprintf(fp,"====Final Check on the stored output values====\n");
+	fprintf(fp,"Value at address 1010 (ADD): %d\n",mem_stack[1010]);
+	fprintf(fp,"Value at address 1011 (ADI): %d\n",mem_stack[1011]);
+	fprintf(fp,"Value at address 1012 (SUB): %d\n",mem_stack[1012]);
+	fprintf(fp,"Value at address 1013 (SBI): %d\n",mem_stack[1013]);
+	fprintf(fp,"Value at address 1014 (MUL): %d\n",mem_stack[1014]);
+	fprintf(fp,"Value at address 1015 (DIV): %d\n",mem_stack[1015]);
+	fprintf(fp,"Value at address 1016 (REM): %d\n",mem_stack[1016]);
+	fclose(fp);
+	printf("%02X\n",mem_stack[1004]);
+	return 0;
+}

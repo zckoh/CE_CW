@@ -1,0 +1,61 @@
+/*
+ * main.cpp
+ *
+ *  Created on: Mar 2, 2018
+ *      Author: zckoh
+ */
+
+
+
+
+#include <stdio.h>
+#include <math.h>
+#include "CPU.h"
+#define __STDC_FORMAT_MACROS 1
+#include <inttypes.h>
+
+//Single memory space (64kB Memory unit)
+uint16_t mem_stack[65536] = {0};
+
+FILE *fp;
+
+int main(void)
+{
+
+	CPU A;
+
+	//Define what is inside the memory (flashing in the program)
+	//program code
+
+	mem_stack[0] = LDA; //Load 20 from address 1000 to AC
+	mem_stack[1] = 1000;
+	mem_stack[2] = 0;
+	mem_stack[3] = 0;
+	mem_stack[4] = STA; //Store 20 to address 1001
+	mem_stack[5] = 1001;
+	mem_stack[6] = 0;
+	mem_stack[7] = 0;
+	mem_stack[8] = EOP; //finish the program
+	mem_stack[9] = 0;
+	mem_stack[10] = 0;
+	mem_stack[11] = 0;
+//==========================================================================================
+	//static data [1000:]
+	mem_stack[1000] = 20;//for testing LDA
+	mem_stack[1001] = 0;// for testing STA
+
+
+	char filename[] = "C:/Users/zckoh/Desktop/ELEC2204_coursework/CE_CW/datamovement_debug_output.txt";
+	fp = fopen(filename, "w");
+	if (fp == NULL) {
+	  fprintf(stderr, "Can't open output file %s!\n",
+			  filename);
+	  exit(1);
+	}
+
+	A.emulate(0);
+	fprintf(fp,"Value at address 1001 : %d\n",mem_stack[1001]);
+	fclose(fp);
+	printf("%02X\n",mem_stack[1004]);
+	return 0;
+}

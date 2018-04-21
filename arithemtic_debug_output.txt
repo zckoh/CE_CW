@@ -1,0 +1,24 @@
+Add to AC, AC = 20
+Stored value of AC (20) to memory
+Add immediate value to AC, AC = 108
+Stored value of AC (108) to memory
+Subtract from AC, AC = 92
+Stored value of AC (92) to memory
+Subtract immediate value from AC, AC = 65
+Stored value of AC (65) to memory
+Multiply wtih AC, AC = 780
+Stored value of AC (780) to memory
+780 (before division)
+ 390 (after division
+Stored value of AC (390) to memory
+REM in AC = 6
+Stored value of AC (6) to memory
+End of program reached
+====Final Check on the stored output values====
+Value at address 1010 (ADD): 20
+Value at address 1011 (ADI): 108
+Value at address 1012 (SUB): 92
+Value at address 1013 (SBI): 65
+Value at address 1014 (MUL): 780
+Value at address 1015 (DIV): 390
+Value at address 1016 (REM): 6

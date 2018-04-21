@@ -1,0 +1,89 @@
+Cleared accumulator, AC = 0
+Fetched Data to AC, AC = 0
+Add immediate value to AC, AC = 1
+Stored value of AC (1) to memory
+Jump to Addr : 24
+satisfied the SLT condition,setting operand 1 to 1
+operand 1 != operand 2, set PC to operand 3
+satisfied the SLI condition, setting operand 1 to 1
+operand 1 == operand 2, set PC to operand 3
+Cleared accumulator, AC = 0
+Fetched Data to AC, AC = 1
+Add immediate value to AC, AC = 2
+Stored value of AC (2) to memory
+Jump to Addr : 24
+satisfied the SLT condition,setting operand 1 to 1
+operand 1 != operand 2, set PC to operand 3
+satisfied the SLI condition, setting operand 1 to 1
+operand 1 == operand 2, set PC to operand 3
+Cleared accumulator, AC = 0
+Fetched Data to AC, AC = 2
+Add immediate value to AC, AC = 3
+Stored value of AC (3) to memory
+Jump to Addr : 24
+satisfied the SLT condition,setting operand 1 to 1
+operand 1 != operand 2, set PC to operand 3
+satisfied the SLI condition, setting operand 1 to 1
+operand 1 == operand 2, set PC to operand 3
+Cleared accumulator, AC = 0
+Fetched Data to AC, AC = 3
+Add immediate value to AC, AC = 4
+Stored value of AC (4) to memory
+Jump to Addr : 24
+satisfied the SLT condition,setting operand 1 to 1
+operand 1 != operand 2, set PC to operand 3
+satisfied the SLI condition, setting operand 1 to 1
+operand 1 == operand 2, set PC to operand 3
+Cleared accumulator, AC = 0
+Fetched Data to AC, AC = 4
+Add immediate value to AC, AC = 5
+Stored value of AC (5) to memory
+Jump to Addr : 24
+satisfied the SLT condition,setting operand 1 to 1
+operand 1 != operand 2, set PC to operand 3
+satisfied the SLI condition, setting operand 1 to 1
+operand 1 == operand 2, set PC to operand 3
+Cleared accumulator, AC = 0
+Fetched Data to AC, AC = 5
+Add immediate value to AC, AC = 6
+Stored value of AC (6) to memory
+Jump to Addr : 24
+satisfied the SLT condition,setting operand 1 to 1
+operand 1 != operand 2, set PC to operand 3
+satisfied the SLI condition, setting operand 1 to 1
+operand 1 == operand 2, set PC to operand 3
+Cleared accumulator, AC = 0
+Fetched Data to AC, AC = 6
+Add immediate value to AC, AC = 7
+Stored value of AC (7) to memory
+Jump to Addr : 24
+satisfied the SLT condition,setting operand 1 to 1
+operand 1 != operand 2, set PC to operand 3
+satisfied the SLI condition, setting operand 1 to 1
+operand 1 == operand 2, set PC to operand 3
+Cleared accumulator, AC = 0
+Fetched Data to AC, AC = 7
+Add immediate value to AC, AC = 8
+Stored value of AC (8) to memory
+Jump to Addr : 24
+satisfied the SLT condition,setting operand 1 to 1
+operand 1 != operand 2, set PC to operand 3
+satisfied the SLI condition, setting operand 1 to 1
+operand 1 == operand 2, set PC to operand 3
+Cleared accumulator, AC = 0
+Fetched Data to AC, AC = 8
+Add immediate value to AC, AC = 9
+Stored value of AC (9) to memory
+Jump to Addr : 24
+satisfied the SLT condition,setting operand 1 to 1
+operand 1 != operand 2, set PC to operand 3
+satisfied the SLI condition, setting operand 1 to 1
+operand 1 == operand 2, set PC to operand 3
+Cleared accumulator, AC = 0
+Fetched Data to AC, AC = 9
+Add immediate value to AC, AC = 10
+Stored value of AC (10) to memory
+Jump to Addr : 24
+did not satisfied the SLT condition, setting operand 1 to 0
+operand 1 == operand 2, set PC to operand 3
+End of program reached
