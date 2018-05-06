@@ -7,7 +7,7 @@ Computer Architecture:
 - fetch/decode/execute cycle
 
 Instruction set:
-⋅⋅* Arithmetic
+* Arithmetic
 1. ADD	Add value from memory to AC
 2. ADI	Add immediate value to AC
 3. SUB	Subtract value from memory from AC
@@ -16,16 +16,16 @@ Instruction set:
 6. DIV	Divide AC by value from memory
 7. REM	Remainder of division of AC by value from memory
 
-⋅⋅* Data movement
+* Data movement
 1. LDA	Load accumulator from memory
 2. STA	Store accumulator value to memory
 
-⋅⋅* Program flow control
+* Program flow control
 1. JMP	Jump to target address
 2. BNE	Branch to target address if operand 1 != operand 2
 3. BEQ	Branch to target address if operand 1 == operand 2
 
-⋅⋅* Others
+* Others
 1. SLT	Set target address to 1 if operand 2 < operand 3
 2. SLI	Set target address to 1 if operand 2 (immediate value) < operand 3 (immediate value)
 3. LET	Set target address to 1 if operand 2 ≤ operand 3
