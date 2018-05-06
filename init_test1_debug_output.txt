@@ -2,3 +2,7 @@ Fetched Data to AC, AC = 20
 Stored value of AC (20) to memory
 End of program reached
 Value at address 1001 : 20
+
+
+
+

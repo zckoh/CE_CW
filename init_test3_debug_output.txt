@@ -87,3 +87,4 @@ Jump to Addr : 24
 did not satisfied the SLT condition, setting operand 1 to 0
 operand 1 == operand 2, set PC to operand 3
 End of program reached
+Value at address 1000 : 10

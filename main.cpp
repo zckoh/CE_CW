@@ -21,77 +21,72 @@ FILE *fp;
 
 int main(void)
 {
-
 	CPU A;
-
 	//Define what is inside the memory (flashing in the program)
 	//program code
 
-	mem_stack[0] = CLA; //Test CLA function
+	//multiplication
+	mem_stack[0] = CLA;  //clear the AC
 	mem_stack[1] = 0;
 	mem_stack[2] = 0;
 	mem_stack[3] = 0;
-
-	mem_stack[4] = LDA; //load accumulator with counter
+	mem_stack[4] = LDA;  //Load AC with data from mem_stack[1000]
 	mem_stack[5] = 1000;
 	mem_stack[6] = 0;
 	mem_stack[7] = 0;
-	mem_stack[8] = ADI; //Add 1 to AC
-	mem_stack[9] = 1;
+	mem_stack[8] = MUL;  //Multiply AC with data from mem_stack[1000]
+	mem_stack[9] = 1000;
 	mem_stack[10] = 0;
 	mem_stack[11] = 0;
-	mem_stack[12] = STA; //store back to address 1000
-	mem_stack[13] = 1000;
+	mem_stack[12] = STA;
+	mem_stack[13] = 1008;
 	mem_stack[14] = 0;
 	mem_stack[15] = 0;
 
-	mem_stack[16] = JMP; //test JMP operation (if fail will EOP)
-	mem_stack[17] = 24;
+	//incrementing
+	mem_stack[16] = CLA;  //clear the AC
+	mem_stack[17] = 0;
 	mem_stack[18] = 0;
 	mem_stack[19] = 0;
-	mem_stack[20] = EOP; //store to address 1012
-	mem_stack[21] = 0;
+	mem_stack[20] = LDA; //Load the AC with data from mem_stack[1000]
+	mem_stack[21] = 1000;
 	mem_stack[22] = 0;
 	mem_stack[23] = 0;
+	mem_stack[24] = ADI; //add immediate value to AC
+	mem_stack[25] = 1;
+	mem_stack[26] = 0;
+	mem_stack[27] = 0;
+	mem_stack[28] = STA;  //Store the value of AC to memory
+	mem_stack[29] = 1000;
+	mem_stack[30] = 0;
+	mem_stack[31] = 0;
 
-	mem_stack[24] = SLT; //if counter less than 10 (in 1001),set 1002 to 1
-	mem_stack[25] = 1002;
-	mem_stack[26] = 1000;
-	mem_stack[27] = 1001;
-	mem_stack[28] = BNE; //Branch to SLI operation if true, else EOP
-	mem_stack[29] = 1002;
-	mem_stack[30] = 1003;
-	mem_stack[31] = 36;
-
-	mem_stack[32] = EOP; //EOP if counter reach 10
-	mem_stack[33] = 0;
-	mem_stack[34] = 0;
-	mem_stack[35] = 0;
-
-	mem_stack[36] = SLI; //if 4<5, set 1004 to 1
-	mem_stack[37] = 1004;
-	mem_stack[38] = 4;
-	mem_stack[39] = 5;
-	mem_stack[40] = BEQ; //as 1004 data is equal to 1005 (1), branch to 0, else EOP
-	mem_stack[41] = 1004;
-	mem_stack[42] = 1005;
+	//branching/loop condition check
+	mem_stack[32] = SLT;
+	mem_stack[33] = 1002;
+	mem_stack[34] = 1000;
+	mem_stack[35] = 1001;
+	mem_stack[36] = BNE;
+	mem_stack[37] = 1002;
+	mem_stack[38] = 1003;
+	mem_stack[39] = 0;
+	//else go to the end
+	mem_stack[40] = EOP;
+	mem_stack[41] = 0;
+	mem_stack[42] = 0;
 	mem_stack[43] = 0;
-	mem_stack[44] = EOP; //End of Program
-	mem_stack[45] = 0;
-	mem_stack[46] = 0;
-	mem_stack[47] = 0;
-
-//==========================================================================================
-	//static data [1000:]
-	mem_stack[1000] = 0;//for counter
-	mem_stack[1001] = 10;// for setting limit for increment
-	mem_stack[1002] = 0;//for testing SLT
-	mem_stack[1003] = 0;//Set to 0 for BNE
-	mem_stack[1004] = 0;//
-	mem_stack[1005] = 1;//
 
 
-	char filename[] = "C:/Users/zckoh/Desktop/ELEC2204_coursework/CE_CW/pcf_debug_output.txt";
+	//static data[1000:]
+	mem_stack[1000] = 0;
+	mem_stack[1001] = 100;
+	mem_stack[1002] = 0;
+	mem_stack[1003] = 0;
+	//output data
+	mem_stack[1008] = 0;
+
+
+	char filename[] = "C:/Users/zckoh/Desktop/ELEC2204_coursework/CE_CW/Q1_debug_output.txt";
 	fp = fopen(filename, "w");
 	if (fp == NULL) {
 	  fprintf(stderr, "Can't open output file %s!\n",

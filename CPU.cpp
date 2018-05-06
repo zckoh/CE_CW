@@ -6,7 +6,7 @@
  */
 
 #include "CPU.h"
-#define DEBUG
+//#define DEBUG
 
 CPU::CPU() {
 	PC = 0;
@@ -117,20 +117,27 @@ void CPU::execute_step()
 		case STA:
 		{
 			put(fetch_operand(1),AC);
-#ifdef DEBUG
-			if(fetch_operand(1) == 1004)
+
+			if(fetch_operand(1) == 1008)
 			{
-				if(AC)
-				{
-					printf("%d is a prime number\n",fetch(1012));
-					fprintf(fp,"%d is a prime number\n",fetch(1012));
-				}
-				else
-				{
-					printf("is not a prime number\n");
-					fprintf(fp,"is not a prime number\n");
-				}
+				printf("Output at address 1008 = %d\n",fetch(1008));
+				fprintf(fp,"Output at address 1008 = %d\n",fetch(1008));
 			}
+//			if(fetch_operand(1) == 1004)
+//			{
+//				if(AC)
+//				{
+//					printf("%d is a prime number\n",fetch(1010));
+//					fprintf(fp,"%d is a prime number\n",fetch(1010));
+//				}
+//				else
+//				{
+//					printf("is not a prime number\n");
+//					fprintf(fp,"is not a prime number\n");
+//				}
+//			}
+
+#ifdef DEBUG
 			printf("Stored value of AC (%d) to memory\n",AC);
 			fprintf(fp,"Stored value of AC (%d) to memory\n",AC);
 #endif
